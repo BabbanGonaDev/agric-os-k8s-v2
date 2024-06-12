@@ -1,0 +1,28 @@
+loki:
+  replicaCount: 2
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "1"
+  storage:
+    type: "filesystem"
+    filesystem:
+      directory: "/loki"
+  serviceAccount:
+    create: false  # Set to false to use an existing ServiceAccount
+    name: loki
+  lokiNetworkPolicyEnabled: false
+  persistence:
+    enabled: true
+    storageClassName: "standard"
+    accessModes: ["ReadWriteOnce"]
+    size: 50Gi
+  # promtail:
+  #   enabled: true
+  #   pipelineStages:
+  #     - docker: {}
+  #   extraVolumes: []
+  #   extraVolumeMounts: []

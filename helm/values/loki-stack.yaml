@@ -1,0 +1,143 @@
+test_pod:
+  enabled: true
+  image: bats/bats:1.8.2
+  pullPolicy: IfNotPresent
+
+loki:
+  enabled: true
+  isDefault: true
+  url: http://loki-stack.monitoring.svc.cluster.local:3100  # Update with the full cluster-local DNS name
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  datasource:
+    jsonData: "{}"
+    uid: ""
+  persistence:
+    enabled: true
+    size: 100Gi
+    storageClassName: "standard"
+
+promtail:
+  enabled: true
+  config:
+    logLevel: info
+    serverPort: 3101
+    clients:
+      - url: http://loki-stack.monitoring.svc.cluster.local:3100/loki/api/v1/push  # Ensure this URL is correct
+    scrape_configs:
+      - job_name: kubernetes-pods
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+          - action: replace
+            source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - action: replace
+            source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - action: replace
+            source_labels: [__meta_kubernetes_pod_container_name]
+            target_label: container
+        pipeline_stages:
+          - docker: {}
+
+fluent-bit:
+  enabled: false
+
+grafana:
+  enabled: true
+  sidecar:
+    datasources:
+      enabled: true
+      label: "grafana_datasource"
+      labelValue: "1"
+      maxLines: 1000
+  image:
+    tag: 10.3.3
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki-stack.monitoring.svc.cluster.local:3100  # Ensure this URL is correct
+        jsonData:
+          maxLines: 1000
+
+prometheus:
+  enabled: true
+  isDefault: false
+  url: http://loki-stack-prometheus-server.monitoring.svc.cluster.local:80  # Adjust the URL to point directly to Prometheus service
+  datasource:
+    jsonData: "{}"
+  server:
+    persistentVolume:
+      enabled: true
+      size: 100Gi
+      storageClass: "standard"
+
+filebeat:
+  enabled: false
+  filebeatConfig:
+    filebeat.yml: |
+      # logging.level: debug
+      filebeat.inputs:
+      - type: container
+        paths:
+          - /var/log/containers/*.log
+        processors:
+        - add_kubernetes_metadata:
+            host: ${NODE_NAME}
+            matchers:
+            - logs_path:
+                logs_path: "/var/log/containers/"
+      output.logstash:
+        hosts: ["logstash-loki:5044"]
+
+logstash:
+  enabled: false
+  image: grafana/logstash-output-loki
+  imageTag: 1.0.1
+  filters:
+    main: |-
+      filter {
+        if [kubernetes] {
+          mutate {
+            add_field => {
+              "container_name" => "%{[kubernetes][container][name]}"
+              "namespace" => "%{[kubernetes][namespace]}"
+              "pod" => "%{[kubernetes][pod][name]}"
+            }
+            replace => { "host" => "%{[kubernetes][node][name]}"}
+          }
+        }
+        mutate {
+          remove_field => ["tags"]
+        }
+      }
+  outputs:
+    main: |-
+      output {
+        loki {
+          url => "http://loki-stack.monitoring.svc.cluster.local:3100/loki/api/v1/push"
+          #username => "test"
+          #password => "test"
+        }
+        # stdout { codec => rubydebug }
+      }
+
+proxy:
+  http_proxy: ""
+  https_proxy: ""
+  no_proxy: ""

@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agric-os-monitoring
+  namespace: monitoring
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    # cloud.google.com/neg: '{"exposed_ports": {"80":{}}}'
+    # cloud.google.com/backend-config: '{"default": "example-backendconfig"}'
+    # networking.gke.io/v1/global-ingress-allowed: "all"
+    # networking.gke.io/v1/global-ingress-managed-security-policy: "projects/YOUR_PROJECT_ID/global/managedSecurityPolicies/waf-rules-policy"
+    # nginx.ingress.kubernetes.io/ssl-redirect: "true" 
+
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: loki-stack-grafana
+                port:
+                  number: 80

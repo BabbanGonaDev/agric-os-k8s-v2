@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agric-os-ingress
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
+    # nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # cloud.google.com/neg: '{"exposed_ports": {"80":{}}}'
+    # cloud.google.com/backend-config: '{"default": "example-backendconfig"}'
+    # networking.gke.io/v1/global-ingress-allowed: "all"
+    # networking.gke.io/v1/global-ingress-managed-security-policy: "projects/YOUR_PROJECT_ID/global/managedSecurityPolicies/waf-rules-policy"
+    # nginx.ingress.kubernetes.io/ssl-redirect: "true" 
+
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api/farmers
+            pathType: Prefix
+            backend:
+              service:
+                name: farming-service
+                port:
+                  number: 80
+          - path: /api/product
+            pathType: Prefix
+            backend:
+              service:
+                name: products-service
+                port:
+                  number: 80
+  defaultBackend:
+    service:
+      name: default-backend
+      port:
+        number: 80

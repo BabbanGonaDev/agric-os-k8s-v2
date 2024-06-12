@@ -1,0 +1,22 @@
+grafana:
+  adminPassword: agric-os-@v2.
+  replicaCount: 2
+  persistence:
+    enabled: true
+    storageClassName: "standard"
+    accessModes: ["ReadWriteOnce"]
+    size: 10Gi
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+  grafana.ini:
+    security:
+      admin_user: admin
+      admin_password: agric-os-@v2.
+  serviceAccount:
+    create: false
+    name: grafana

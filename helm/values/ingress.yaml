@@ -1,0 +1,62 @@
+controller:
+  replicaCount: 3
+  minAvailable: 2
+  image:
+    repository: k8s.gcr.io/ingress-nginx/controller
+    tag: "v1.0.4"
+    pullPolicy: IfNotPresent
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "10254"
+  service:
+    annotations:
+      # cloud.google.com/backend-config: '{"default": "backend-config"}' # If using GCP backend config
+      service.beta.kubernetes.io/enable-load-balancer-autoscaling: "true"
+    externalTrafficPolicy: Local
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+  nodeSelector:
+    ingress-ready: "true"
+  tolerations:
+    - key: "node-role.kubernetes.io/master"
+      operator: "Exists"
+      effect: "NoSchedule"
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - ingress-nginx
+        topologyKey: kubernetes.io/hostname
+  metrics:
+    enabled: true
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "10254"
+  stats:
+    enabled: true
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "18080"
+  ingressClassResource:
+    default: true
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+    runAsNonRoot: true
+    runAsUser: 101
+    runAsGroup: 101
+  podSecurityContext:
+    fsGroup: 101
