@@ -177,8 +177,10 @@ jobs:
       id: get-credentials
       uses: google-github-actions/get-gke-credentials@v1
       with:
-        cluster_name: ${{ secrets.GKE_CLUSTER }}
-        location: ${{ secrets.GKE_ZONE }}
+        # cluster_name: ${{ secrets.GKE_CLUSTER }}
+        # location: ${{ secrets.GKE_ZONE }}
+        cluster_name:  agric-os-prod-v2 
+        location: europe-west3-a 
 
     - name: Set up kubectl
       uses: azure/setup-kubectl@v3

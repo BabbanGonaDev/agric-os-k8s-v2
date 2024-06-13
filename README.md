@@ -1,3 +1,7 @@
+## Agric OS Redeployment to version-2
+
+![Architecture diagram](./assets/infra.jpeg)
+
 ### Monitoring with Helm Chart
 - Install Helm: Ensure Helm is installed.
 - Add Repositories: Add the Prometheus, Grafana, and Loki Helm repositories.
