@@ -44,7 +44,7 @@ jobs:
           SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://github.com/rtCamp.png?size=48
           SLACK_LINK_NAMES: true
-          SLACK_MSG_AUTHOR: ${GITHUB_ACTOR}
+          SLACK_MSG_AUTHOR: ${{env.GITHUB_ACTOR}}
           SLACK_TITLE: Gitleak Failed
           SLACK_MESSAGE: "${{ github.event.head_commit.message }} || App_version:${{ env.APP_VERSION }} "
           SLACK_USERNAME: rtCamp
@@ -175,8 +175,9 @@ jobs:
       id: gcp-auth
       uses: google-github-actions/auth@v1
       with: 
-        workload_identity_provider: '/projects/524687905739/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
-        service_account: 'agricos-prod-access-from-githu@agri-os-prod.iam.gserviceaccount.com'
+        credentials_json: '${{ secrets.gcp_credentials }}'
+        # workload_identity_provider: '/projects/524687905739/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+        # service_account: 'agricos-prod-access-from-githu@agri-os-prod.iam.gserviceaccount.com'
         # audience: "//iam.googleapis.com/projects/agri-os-prod /locations/global/workloadIdentityPools/github-pool/providers/github-provider"
         # audience: "github-testing"
 
