@@ -1,4 +1,4 @@
-## Agric OS Redeployment to version-2
+## Agric OS Redeployment to version-2.
 
 ![Architecture diagram](./assets/infra.jpeg)
 
