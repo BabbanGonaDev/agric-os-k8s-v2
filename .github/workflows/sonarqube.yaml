@@ -171,7 +171,7 @@ jobs:
       with: 
         workload_identity_provider: '/projects/524687905739/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
         service_account: 'agricos-prod-access-from-githu@agri-os-prod.iam.gserviceaccount.com'
-        # audience: "//iam.googleapis.com/projects/524687905739/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
+        audience: "//iam.googleapis.com/projects/524687905739/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
 
     - name: Get GKE Credentials
       id: get-credentials
