@@ -35,6 +35,7 @@ jobs:
           base-revision: origin/main # Optional: Specify the base revision for pull requests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}} # Only required for Organizations,
 
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
@@ -175,7 +176,17 @@ jobs:
         workload_identity_provider: '/projects/524687905739/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
         service_account: 'agricos-prod-access-from-githu@agri-os-prod.iam.gserviceaccount.com'
         # audience: "//iam.googleapis.com/projects/agri-os-prod /locations/global/workloadIdentityPools/github-pool/providers/github-provider"
-        audience: "github-testing"
+        # audience: "github-testing"
+
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        # credentials_json: '${{ secrets.gcp_credentials }}'
+        workload_identity_provider: '/projects/524687905739/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+        service_account: 'agricos-prod-access-from-githu@agri-os-prod.iam.gserviceaccount.com'
+        # audience: "//iam.googleapis.com/projects/agri-os-prod /locations/global/workloadIdentityPools/github-pool/providers/github-provider"
+        # audience: "github-testing"
+
 
     - name: Get GKE Credentials
       id: get-credentials
@@ -191,9 +202,14 @@ jobs:
       with:
         version: 'latest'
 
-    - name: Redeploy Kubernetes Deployment
-      run: |
-        kubectl rollout restart deployment/farming-deployment --reason="Redployment with image Tag of ${GITHUB_SHA::7} and Latest"
+
+    # The KUBECONFIG env var is automatically exported and picked up by kubectl.
+    - id: 'get-pods'
+      run: 'kubectl get pods'
+
+    # - name: Redeploy Kubernetes Deployment
+    #   run: |
+    #     kubectl rollout restart deployment/farming-deployment --reason="Redployment with image Tag of ${GITHUB_SHA::7} and Latest"
 
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
@@ -204,5 +220,5 @@ jobs:
         SLACK_MESSAGE: "${{ github.event.head_commit.message }} || App_version:${{ env.APP_VERSION }} "
         SLACK_TITLE: Commit Message
         SLACK_USERNAME: rtCamp
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
+        # SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
       if: always()
