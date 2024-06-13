@@ -10,7 +10,7 @@ const db = [
 ];
 
 // Hard-coded secret (Security Vulnerability)
-const apiKey = "6a7f90b9-89e7-4c36-a12f-68792187b830"; // NOSONAR
+const apiKey = "6a7f90b9-89e7-4c36-a12f-68792187b830";
 
 // Sensitive information: Database credentials
 const dbUsername = "admin";
