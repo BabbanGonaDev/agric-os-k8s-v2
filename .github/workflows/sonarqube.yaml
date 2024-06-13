@@ -16,6 +16,9 @@ on:
     branches:
       - main
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
 jobs:
   # Job 1: GitLeak scan to check for sensitive information leaks
   gitleak-scan:
@@ -171,8 +174,8 @@ jobs:
       with: 
         workload_identity_provider: '/projects/524687905739/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
         service_account: 'agricos-prod-access-from-githu@agri-os-prod.iam.gserviceaccount.com'
-        audience: "//iam.googleapis.com/projects/agri-os-prod /locations/global/workloadIdentityPools/github-pool/providers/github-provider"
-        # audience: "//iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_NAME/providers/PROVIDER_NAME"
+        # audience: "//iam.googleapis.com/projects/agri-os-prod /locations/global/workloadIdentityPools/github-pool/providers/github-provider"
+        audience: "github-testing"
 
     - name: Get GKE Credentials
       id: get-credentials
