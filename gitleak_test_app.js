@@ -27,6 +27,9 @@ app.use(function *(next) {
   console.log("%s %s - %s", this.method, this.url, ms);
 });
 
+// Hard-coded secret (Security Vulnerability)
+const apiKey2 = "6a7f90b9-89e7-4c36-a12f-68792187b830";
+
 // Route to get all farmers
 router.get('/api/farmers', function *(next) {
   yield next;
