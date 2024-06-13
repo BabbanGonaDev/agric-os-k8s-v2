@@ -180,10 +180,10 @@ jobs:
         # audience: "//iam.googleapis.com/projects/agri-os-prod /locations/global/workloadIdentityPools/github-pool/providers/github-provider"
         # audience: "github-testing"
 
-    - id: 'auth'
-      uses: 'google-github-actions/auth@v2'
-      with:
-        credentials_json: '${{ secrets.gcp_credentials }}'
+    # - id: 'auth'
+    #   uses: 'google-github-actions/auth@v2'
+    #   with:
+    #     credentials_json: '${{ secrets.gcp_credentials }}'
         # workload_identity_provider: '/projects/524687905739/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
         # service_account: 'agricos-prod-access-from-githu@agri-os-prod.iam.gserviceaccount.com'
 
