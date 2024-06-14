@@ -48,6 +48,15 @@ router.get('/api/farmers', function *(next) {
   this.body = filteredFarmers;
 });
 
+// Middleware to log request method, URL, and response time
+app.use(function *(next) {
+  const start = new Date();
+  yield next;
+  const ms = new Date() - start;
+  console.log("%s %s - %s", this.method, this.url, ms);
+  console.log("Sensitive Information: ", dbUsername, dbPassword); // Exposing sensitive information in logs
+});
+
 // Register routes and middlewares
 app
   .use(router.routes())
