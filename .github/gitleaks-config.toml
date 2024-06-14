@@ -1,0 +1,21 @@
+title = "GitLeaks Configuration"
+
+[[rules]]
+description = "Generic API Key"
+regex = '''(?i)(api[_-]?key|secret|token)[\s]*[:=][\s]*['|"]?[0-9a-zA-Z]{20,}['|"]?'''
+tags = ["key", "api", "secret"]
+
+[[rules]]
+description = "AWS Secret Access Key"
+regex = '''AKIA[0-9A-Z]{16}'''
+tags = ["key", "aws"]
+
+[[rules]]
+description = "Private Key"
+regex = '''-----BEGIN (RSA|EC|DSA|OPENSSH|PRIVATE) KEY-----'''
+tags = ["key", "private"]
+
+[[rules]]
+description = "Sensitive Database Credentials"
+regex = '''(?i)(db[_-]?user(name)?|db[_-]?pass(word)?)[\s]*[:=][\s]*['|"]?[\w@#$%^&*]{8,}['|"]?'''
+tags = ["database", "credentials"]
