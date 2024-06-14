@@ -31,7 +31,7 @@ jobs:
       - name: Run GitLeaks Scan
         uses: gitleaks/gitleaks-action@v2
         with:
-          config-path: .gitleaks.toml # Optional: Specify a custom configuration file
+          config: .github/gitleaks-config.toml # Optional: Specify a custom configuration file
           base-revision: origin/main # Optional: Specify the base revision for pull requests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
