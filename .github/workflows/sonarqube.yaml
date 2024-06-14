@@ -85,11 +85,11 @@ jobs:
 
     - name: Check for sonarqube ignore directives
       run: |
-        if grep -r "// NOSONAR" .; then
+        if grep -r "// NOSONAR" . --exclude-dir=.github/workflows; then
           echo "Found // NOSONAR directive(s). Please remove them."
           exit 1
         fi
-        if grep -r "sonar-ignore" .; then
+        if grep -r "sonar-ignore"  . --exclude-dir=.github/workflows; then
           echo "Found sonar-ignore directive(s). Please remove them."
           exit 1
         fi
