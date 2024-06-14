@@ -95,3 +95,13 @@ const gcpServiceAccount = `{
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/my-service-account%40my-project.iam.gserviceaccount.com"
 }`;
+
+
+function MyClass() {
+  this.foo = 'bar';
+}
+
+var someClass = 1;
+
+var obj1 = new someClass;    // Noncompliant;
+var obj2 = new MyClass();
