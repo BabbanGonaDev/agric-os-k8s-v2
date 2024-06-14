@@ -55,7 +55,7 @@ jobs:
   # Job 2: Static Code Analysis with SonarQube
   static-code-analysis:
     runs-on: ubuntu-latest
-    needs: gitleak-scan  # This ensures gitleak-scan job completes first
+    # needs: gitleak-scan  # This ensures gitleak-scan job completes first
     permissions:
       contents: 'read' 
 
