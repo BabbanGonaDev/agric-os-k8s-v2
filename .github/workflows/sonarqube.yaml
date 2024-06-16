@@ -230,7 +230,7 @@ jobs:
         echo "${IMAGE}:${IMAGE_TAG}"
         echo "${{vars.NAMESPACE}}"
         echo "${{vars.REPLICAS}}"
-        echo "${{INGRESS_IP}}"
+        echo "${{env.INGRESS_IP}}"
         cat applications/service-envs/dev/*.yaml
 
     # The KUBECONFIG env var is automatically exported and picked up by kubectl.
