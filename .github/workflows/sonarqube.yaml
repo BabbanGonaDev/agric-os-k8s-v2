@@ -24,8 +24,10 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_TAG: ${GITHUB_SHA::7}
   IMAGE: "gcr.io/your-gcp-project-id/your-app-name"
+  GKE_CLUSTER: "agric-os-prod-v2"
+  GKE_ZONE: "europe-west3-a"
+
 
 jobs:
   # Job 1: GitLeak scan to check for sensitive information leaks
@@ -140,7 +142,7 @@ jobs:
     - name: Build Docker Image
       run: |
         docker build -t ${IMAGE}:latest .
-        docker build -t ${IMAGE}:${IMAGE_TAG} .
+        docker build -t ${IMAGE}:${GITHUB_SHA::7} .
 
     - name: Run Trivy Scan
       run: |
@@ -149,7 +151,7 @@ jobs:
     - name: Push Docker Image
       run: |
         docker push ${IMAGE}:latest
-        docker push ${IMAGE}:${IMAGE_TAG}
+        docker push ${IMAGE}:${GITHUB_SHA::7}
 
     - name: Install Trivy
       run: |
@@ -195,10 +197,8 @@ jobs:
       id: get-credentials
       uses: google-github-actions/get-gke-credentials@v1
       with:
-        # cluster_name: ${{ secrets.GKE_CLUSTER }}
-        # location: ${{ secrets.GKE_ZONE }}
-        cluster_name: agric-os-prod-v2
-        location: europe-west3-a
+        cluster_name: ${GKE_CLUSTER}
+        location: ${GKE_ZONE}
 
     - name: Replace token in manifest files
       uses: cschleiden/replace-tokens@v1
@@ -209,7 +209,7 @@ jobs:
       env:
         NAMESPACE: ${{vars.NAMESPACE}}
         REPLICAS: ${{vars.REPLICAS}}
-        IMAGE: ${IMAGE}:${IMAGE_TAG}
+        IMAGE: ${IMAGE}:${GITHUB_SHA::7}
 
     - name: Install kubectl
       uses: azure/setup-kubectl@v3
@@ -225,21 +225,8 @@ jobs:
         echo "INGRESS_IP=$INGRESS_IP" >> $GITHUB_ENV
 
     # The KUBECONFIG env var is automatically exported and picked up by kubectl.
-    - name: Check all file 
-      run: |
-        echo "${IMAGE}:${IMAGE_TAG}"
-        echo "${{vars.NAMESPACE}}"
-        echo "${{vars.REPLICAS}}"
-        echo "${{env.INGRESS_IP}}"
-        cat applications/service-envs/dev/*.yaml
-
-    # The KUBECONFIG env var is automatically exported and picked up by kubectl.
     - name: Get pods in default namespace
-      run: 'kubectl get pods'
-
-    # - name: Redeploy Kubernetes Deployment
-    #   run: |
-    #     kubectl rollout restart deployment/farming-deployment --reason="Redployment with image Tag of ${GITHUB_SHA::7} and Latest"
+      run: 'kubectl apply -f applications/service-envs/dev'
 
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
@@ -250,7 +237,7 @@ jobs:
         SLACK_MESSAGE: "${{ github.event.head_commit.message }} || App_version:${{ env.APP_VERSION }} "
         SLACK_TITLE: Commit Message
         SLACK_USERNAME: rtCamp
-        # SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
       if: always()
 
   # Integration_testing:
@@ -260,6 +247,6 @@ jobs:
   #     run: |
 
 
-      # Add environment with url variable 
-      # Add integration path with url of the app for curl testing with response check
-      # If statement and different need
+  # Add environment with url variable 
+  # Add integration path with url of the app for curl testing with response check
+  # If statement and different need
