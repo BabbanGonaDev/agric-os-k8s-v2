@@ -209,7 +209,8 @@ jobs:
       env:
         NAMESPACE: ${{vars.NAMESPACE}}
         REPLICAS: ${{vars.REPLICAS}}
-        IMAGE: ${IMAGE}:${GITHUB_SHA::7}
+        # IMAGE: ${IMAGE}:${GITHUB_SHA::7}
+        IMAGE: lukhee/bg-agric-os:farming
 
     - name: Install kubectl
       uses: azure/setup-kubectl@v3
@@ -227,7 +228,7 @@ jobs:
       run: |
         INGRESS_IP=$(kubectl get ingress -o json | jq -r '.items[0].status.loadBalancer.ingress[0].ip')
         echo "INGRESS_IP=$INGRESS_IP" >> $GITHUB_ENV
-        
+
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
       env:

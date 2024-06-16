@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: farmer-ingress
-  namespace: _{_NAMESPACE_}_
+  # namespace: _{_NAMESPACE_}_
   annotations:
     cloud.google.com/neg: '{"ingress": true}'
     # nginx.ingress.kubernetes.io/rewrite-target: /$2
