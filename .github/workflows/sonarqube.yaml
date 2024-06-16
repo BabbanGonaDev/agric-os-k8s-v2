@@ -219,15 +219,15 @@ jobs:
     - name: Install jq
       run: sudo apt-get update && sudo apt-get install -y jq
 
+    # The KUBECONFIG env var is automatically exported and picked up by kubectl.
+    - name: Deploy manifest
+      run: 'kubectl apply -f applications/service-envs/dev'
+
     - name: Retrieve ingress IP
       run: |
         INGRESS_IP=$(kubectl get ingress -o json | jq -r '.items[0].status.loadBalancer.ingress[0].ip')
         echo "INGRESS_IP=$INGRESS_IP" >> $GITHUB_ENV
-
-    # The KUBECONFIG env var is automatically exported and picked up by kubectl.
-    - name: Get pods in default namespace
-      run: 'kubectl apply -f applications/service-envs/dev'
-
+        
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
       env:
