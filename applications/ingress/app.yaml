@@ -16,13 +16,6 @@ spec:
   rules:
     - http:
         paths:
-          # - path: /api/farmers
-          #   pathType: Prefix
-          #   backend:
-          #     service:
-          #       name: farming-service
-          #       port:
-          #         number: 80
           - path: /api/product
             pathType: Prefix
             backend:
