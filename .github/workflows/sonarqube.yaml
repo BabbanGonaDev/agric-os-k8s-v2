@@ -227,7 +227,7 @@ jobs:
     # The KUBECONFIG env var is automatically exported and picked up by kubectl.
     - name: Check all file 
       run: |
-        echo "${env.IMAGE}:${env.IMAGE_TAG}"
+        echo "${IMAGE}:${IMAGE_TAG}"
         echo "${{vars.NAMESPACE}}"
         echo "${{vars.REPLICAS}}"
         echo "${{env.INGRESS_IP}}"
