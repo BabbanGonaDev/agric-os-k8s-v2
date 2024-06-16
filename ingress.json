@@ -1,0 +1,83 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "networking.k8s.io/v1",
+            "kind": "Ingress",
+            "metadata": {
+                "annotations": {
+                    "cloud.google.com/neg": "{\"ingress\": true}",
+                    "ingress.kubernetes.io/backends": "{\"k8s1-0da974ea-default-default-backend-80-2b8cae36\":\"UNHEALTHY\",\"k8s1-0da974ea-default-farming-service-80-e435415c\":\"HEALTHY\",\"k8s1-0da974ea-default-products-service-80-f92078b8\":\"HEALTHY\"}",
+                    "ingress.kubernetes.io/forwarding-rule": "k8s2-fr-p2xwimyz-default-agric-os-ingress-q23eajnt",
+                    "ingress.kubernetes.io/target-proxy": "k8s2-tp-p2xwimyz-default-agric-os-ingress-q23eajnt",
+                    "ingress.kubernetes.io/url-map": "k8s2-um-p2xwimyz-default-agric-os-ingress-q23eajnt",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"Ingress\",\"metadata\":{\"annotations\":{\"cloud.google.com/neg\":\"{\\\"ingress\\\": true}\"},\"name\":\"agric-os-ingress\",\"namespace\":\"default\"},\"spec\":{\"defaultBackend\":{\"service\":{\"name\":\"default-backend\",\"port\":{\"number\":80}}},\"rules\":[{\"http\":{\"paths\":[{\"backend\":{\"service\":{\"name\":\"farming-service\",\"port\":{\"number\":80}}},\"path\":\"/api/farmers\",\"pathType\":\"Prefix\"},{\"backend\":{\"service\":{\"name\":\"products-service\",\"port\":{\"number\":80}}},\"path\":\"/api/product\",\"pathType\":\"Prefix\"}]}}]}}\n"
+                },
+                "creationTimestamp": "2024-06-05T13:17:46Z",
+                "finalizers": [
+                    "networking.gke.io/ingress-finalizer-V2"
+                ],
+                "generation": 1,
+                "name": "agric-os-ingress",
+                "namespace": "default",
+                "resourceVersion": "2020698",
+                "uid": "7ff0a887-fd38-4b77-98a5-6659deac3cd8"
+            },
+            "spec": {
+                "defaultBackend": {
+                    "service": {
+                        "name": "default-backend",
+                        "port": {
+                            "number": 80
+                        }
+                    }
+                },
+                "rules": [
+                    {
+                        "http": {
+                            "paths": [
+                                {
+                                    "backend": {
+                                        "service": {
+                                            "name": "farming-service",
+                                            "port": {
+                                                "number": 80
+                                            }
+                                        }
+                                    },
+                                    "path": "/api/farmers",
+                                    "pathType": "Prefix"
+                                },
+                                {
+                                    "backend": {
+                                        "service": {
+                                            "name": "products-service",
+                                            "port": {
+                                                "number": 80
+                                            }
+                                        }
+                                    },
+                                    "path": "/api/product",
+                                    "pathType": "Prefix"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "loadBalancer": {
+                    "ingress": [
+                        {
+                            "ip": "34.149.20.229"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
