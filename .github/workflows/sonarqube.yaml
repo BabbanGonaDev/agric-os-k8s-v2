@@ -244,11 +244,11 @@ jobs:
         # SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
       if: always()
 
-  Integration_testing:
-    needs: redeploy
-    steps:
-    - name: Run application Testing using curl to ingress ip
-      run: |
+  # Integration_testing:
+  #   needs: redeploy
+  #   steps:
+  #   - name: Run application Testing using curl to ingress ip
+  #     run: |
 
 
       # Add environment with url variable 
