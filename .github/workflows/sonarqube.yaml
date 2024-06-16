@@ -222,7 +222,7 @@ jobs:
 
     - name: Create application secret
       run: |
-        echo "$vars.DB_HOST"
+        echo "${{vars.DB_HOST}}"
         kubectl create secret generic farming-secret \
          --from-literal=DB_HOST=${{vars.DB_HOST}} \
          --from-literal=DB_USERNAME=${{vars.DB_USERNAME}} \
