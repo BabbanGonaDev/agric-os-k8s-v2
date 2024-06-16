@@ -216,10 +216,14 @@ jobs:
       with:
         version: 'latest'
 
-    - name: Save the Ingress ingress IP
-      run: |
-        echo "INGRESS_IP=${kubectl get ingress -o json | jq -r '.items[0].status.loadBalancer.ingress[0].ip'}" >> $GITHUB_ENV
+    - name: Install jq
+      run: sudo apt-get update && sudo apt-get install -y jq
 
+    - name: Retrieve ingress IP
+      run: |
+        INGRESS_IP=$(kubectl get ingress -o json | jq -r '.items[0].status.loadBalancer.ingress[0].ip')
+        echo "INGRESS_IP=$INGRESS_IP" >> $GITHUB_ENV
+        
     # The KUBECONFIG env var is automatically exported and picked up by kubectl.
     - name: Check all file 
       run: cat applications/service-envs/dev/*.yaml
