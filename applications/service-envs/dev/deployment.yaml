@@ -46,12 +46,9 @@ spec:
             port: 3000
           initialDelaySeconds: 3
           periodSeconds: 3
-      # env:
-      #   - name:  ENV_VAR
-      #     valueFrom:
-      #       secretKeyRef:
-      #         name:  name
-      #         key:  key
+      envFrom:
+        - secretRef:
+            name: farming-secret
           
   strategy:
     type: RollingUpdate  # Default strategy, updates pods in a rolling manner

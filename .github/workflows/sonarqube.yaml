@@ -24,7 +24,8 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE: "gcr.io/your-gcp-project-id/your-app-name"
+  IMAGE: "lukhee/bg-agric-os"
+  TAG: "farming"
   GKE_CLUSTER: "agric-os-prod-v2"
   GKE_ZONE: "europe-west3-a"
 
@@ -209,8 +210,7 @@ jobs:
       env:
         NAMESPACE: ${{vars.NAMESPACE}}
         REPLICAS: ${{vars.REPLICAS}}
-        # IMAGE: ${IMAGE}:${GITHUB_SHA::7}
-        IMAGE: lukhee/bg-agric-os:farming
+        IMAGE: ${{env.IMAGE}}:${{env.TAG}}
 
     - name: Install kubectl
       uses: azure/setup-kubectl@v3
@@ -219,6 +219,13 @@ jobs:
 
     - name: Install jq
       run: sudo apt-get update && sudo apt-get install -y jq
+
+    - name: Create application secret
+      run: |
+        kubectl create secret generic farming-secret \
+         --from-literal=DB_HOST=${{vars.DB_HOST}} \
+         --from-literal=DB_USERNAME=${{vars.DB_USERNAME}} \
+         --from-literal=DB_PASSWORD=${{vars.DB_PASSWORD}} 
 
     # The KUBECONFIG env var is automatically exported and picked up by kubectl.
     - name: Deploy manifest
