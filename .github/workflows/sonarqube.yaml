@@ -197,8 +197,8 @@ jobs:
       id: get-credentials
       uses: google-github-actions/get-gke-credentials@v1
       with:
-        cluster_name: ${GKE_CLUSTER}
-        location: ${GKE_ZONE}
+        cluster_name: agric-os-prod-v2
+        location: europe-west3-a
 
     - name: Replace token in manifest files
       uses: cschleiden/replace-tokens@v1
