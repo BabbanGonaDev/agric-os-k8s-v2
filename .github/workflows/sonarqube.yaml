@@ -28,7 +28,7 @@ env:
   TAG: "farming"
   GKE_CLUSTER: "agric-os-prod-v2"
   GKE_ZONE: "europe-west3-a"
-  ROUTE: 
+  ROUTE: "api/farmer"
 
 
 jobs:
