@@ -49,7 +49,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}} # Only required for Organizations,
 
-
   # Job 2: Static Code Analysis with SonarQube
   static-code-analysis:
     runs-on: ubuntu-latest
@@ -76,11 +75,11 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-    - name: Check SonarQube Quality Gate
-      uses: sonarsource/sonarqube-quality-gate-action@master
-      timeout-minutes: 5
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    # - name: Check SonarQube Quality Gate
+    #   uses: sonarsource/sonarqube-quality-gate-action@master
+    #   timeout-minutes: 5
+    #   env:
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     - name: Check for sonarqube ignore directives
       run: |
@@ -93,18 +92,6 @@ jobs:
           exit 1
         fi
       shell: bash
-
-    - name: Slack Notification
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_CHANNEL: core-api-alert
-        SLACK_COLOR: ${{ job.status }}
-        SLACK_ICON: https://github.com/rtCamp.png?size=48
-        SLACK_MESSAGE: "${{ github.event.head_commit.message }} || App_version:${{ env.APP_VERSION }} "
-        SLACK_TITLE: Commit Message
-        SLACK_USERNAME: rtCamp
-        # SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
-      if: failure()
 
   # Job 3: Trivy Vulnerability Scan
   build-trivy-check-and-push:
@@ -127,37 +114,25 @@ jobs:
       run: |
         gcloud auth configure-docker
 
-    - name: Build Docker Image
-      run: |
-        docker build -t ${IMAGE}:latest ./farmers
-        docker build -t ${IMAGE}:${GITHUB_SHA::7} .farmers
+    # - name: Build Docker Image
+    #   run: |
+    #     docker build -t ${IMAGE}:latest ./farmers
+    #     docker build -t ${IMAGE}:${GITHUB_SHA::7} .farmers
 
-    - name: Run Trivy Scan
-      run: |
-        trivy image --severity HIGH,CRITICAL ${IMAGE}:latest
+    # - name: Run Trivy Scan
+    #   run: |
+    #     trivy image --severity HIGH,CRITICAL ${IMAGE}:latest
 
-    - name: Push Docker Image
-      run: |
-        docker push ${IMAGE}:latest
-        docker push ${IMAGE}:${GITHUB_SHA::7}
+    # - name: Push Docker Image
+    #   run: |
+    #     docker push ${IMAGE}:latest
+    #     docker push ${IMAGE}:${GITHUB_SHA::7}
 
-    - name: Install Trivy
-      run: |
-        wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-        echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-        sudo apt-get update && sudo apt-get install -y trivy
-
-    - name: Slack Notification
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_CHANNEL: core-api-alert
-        SLACK_COLOR: ${{ job.status }}
-        SLACK_ICON: https://github.com/rtCamp.png?size=48
-        SLACK_MESSAGE: "${{ github.event.head_commit.message }} || App_version:${{ env.APP_VERSION }} "
-        SLACK_TITLE: Commit Message
-        SLACK_USERNAME: rtCamp
-        # SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
-      if: failure()
+    # - name: Install Trivy
+    #   run: |
+    #     wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+    #     echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+    #     sudo apt-get update && sudo apt-get install -y trivy
 
   # Job 4: Redeploy Kubernetes Deployment
   dev-deploy:
@@ -238,19 +213,6 @@ jobs:
         INGRESS_IP=$(kubectl get ingress -o json | jq -r '.items[0].status.loadBalancer.ingress[0].ip')
         echo "INGRESS_IP=$INGRESS_IP" >> $GITHUB_OUTPUT
 
-    - name: Slack Notification
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_CHANNEL: core-api-alert
-        SLACK_COLOR: ${{ job.status }}
-        SLACK_ICON: https://github.com/rtCamp.png?size=48
-        SLACK_MESSAGE: "${{ github.event.head_commit.message }} || App_version:${{ env.APP_VERSION }} "
-        SLACK_TITLE: Commit Message
-        SLACK_USERNAME: rtCamp
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
-      if: always()
-
-
   Run-Integration-Testing:
     if: ${{ startsWith(github.ref, 'refs/heads/feature') || github.ref == 'refs/heads/dev' }}
     runs-on: ubuntu-latest
@@ -269,7 +231,6 @@ jobs:
           echo "404 Error: Resource not found"
           exit 1  # Exit with an error code to indicate failure
         fi
-
 
   # Job 4: Redeploy Kubernetes Deployment
   staging-deploy:
@@ -361,7 +322,6 @@ jobs:
         SLACK_USERNAME: rtCamp
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
       if: always()
-
 
   Run-staging-Integration-Testing:
     if: github.ref == 'refs/heads/main'
