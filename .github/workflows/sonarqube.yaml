@@ -384,7 +384,7 @@ jobs:
     steps:
     - name: Run application Testing using curl to ingress ip
       env:
-        URL: ${{needs.dev-deploy.outputs.INGRESS_URL}}
+        URL: ${{needs.staging-deploy.outputs.INGRESS_URL}}
       run: |
         echo "http://$URL/$ROUTE"
         echo "-------------------------"
