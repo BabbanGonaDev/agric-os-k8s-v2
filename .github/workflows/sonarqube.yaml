@@ -223,19 +223,15 @@ jobs:
 
     - name: Create or update application secret
       run: |
-        echo "DB_HOST: ${{vars.DB_HOST}}"
-        echo "DB_USERNAME: $vars.DB_USERNAME"
-        echo "DB_PASSWORD: $DB_PASSWORD"
-
         echo "apiVersion: v1
         kind: Secret
         metadata:
           name: farming-secret
         type: Opaque
         stringData:
-          DB_HOST: $DB_HOST
-          DB_USERNAME: $DB_USERNAME
-          DB_PASSWORD: $DB_PASSWORD" | kubectl apply -f -
+          DB_HOST: ${{ vars.DB_HOST }}
+          DB_USERNAME: ${{ vars.DB_USERNAME }}
+          DB_PASSWORD: ${{ vars.DB_PASSWORD }}" | kubectl apply -f -
 
         kubectl get secret farming-secret -o yaml
 
