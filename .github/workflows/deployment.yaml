@@ -400,4 +400,4 @@ jobs:
         SLACK_MESSAGE: "${{ github.event.head_commit.message }} || App_version:${{ env.APP_VERSION }} "
         SLACK_USERNAME: rtCamp
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
-      if: failure()
+      if: always()
