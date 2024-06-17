@@ -25,11 +25,11 @@ router.get('/api/farmers/:farmersId', async (ctx, next) => {
 });
 
 router.get('/api/', async (ctx) => {
-  ctx.body = 'Farmers API ready to receive requests...';
+  ctx.body = 'Farmers API ready to receive requests....';
 });
 
 router.get('/', async (ctx) => {
-  ctx.body = 'Setup and ready to receive request...';
+  ctx.body = 'Setup and ready to receive request....';
 });
 
 app.use(router.routes());
