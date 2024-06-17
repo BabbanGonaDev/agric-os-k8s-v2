@@ -260,24 +260,19 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
       if: always()
 
-  Integration_testing:
-    needs: dev-deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run application Testing using curl to ingress ip
-        env:
-          URL: ${{needs.dev-deploy.outputs.INGRESS_URL}}
-        run: |
-          echo "$URL"
-          echo "-------------------------"
-          echo "statusCode=${curl -i -s http://$URL/$ROUTE  | grep HTTP | awk '{print $2}'}"
-          if [[ $statusCode -eq 200 ]]; then
-            echo "API endpoint is accessible"
-          else
-            echo "404 Error: Resource not found"
-            exit 1  # Exit with an error code to indicate failure
-          fi
-
+    - name: Run application Testing using curl to ingress ip
+      env:
+        URL: ${{needs.dev-deploy.outputs.INGRESS_URL}}
+      run: |
+        echo "$URL"
+        echo "-------------------------"
+        status_code=$(curl -i -s http://$URL/$ROUTE | grep HTTP | awk '{print $2}')
+        if [[ $status_code -eq 200 ]]; then
+          echo "API endpoint is accessible"
+        else
+          echo "404 Error: Resource not found"
+          exit 1  # Exit with an error code to indicate failure
+        fi
 
   # Add environment with url variable 
   # Add integration path with url of the app for curl testing with response check
