@@ -220,13 +220,19 @@ jobs:
     - name: Install jq
       run: sudo apt-get update && sudo apt-get install -y jq
 
-    - name: Create application secret
+    - name: Create or update application secret
       run: |
-        echo "${{vars.DB_HOST}}"
-        kubectl create secret generic farming-secret \
-         --from-literal=DB_HOST=${{vars.DB_HOST}} \
-         --from-literal=DB_USERNAME=${{vars.DB_USERNAME}} \
-         --from-literal=DB_PASSWORD=${{vars.DB_PASSWORD}} 
+        kubectl apply -f - <<EOF
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: farming-secret
+        type: Opaque
+        stringData:
+          DB_HOST: ${vars.DB_HOST}
+          DB_USERNAME: ${vars.DB_USERNAME}
+          DB_PASSWORD: ${vars.DB_PASSWORD}
+        EOF
 
     # The KUBECONFIG env var is automatically exported and picked up by kubectl.
     - name: Deploy manifest
