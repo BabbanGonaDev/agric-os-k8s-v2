@@ -220,19 +220,18 @@ jobs:
     - name: Install jq
       run: sudo apt-get update && sudo apt-get install -y jq
 
+
     - name: Create or update application secret
       run: |
-        kubectl apply -f - <<EOF
-        apiVersion: v1
+        echo "apiVersion: v1
         kind: Secret
         metadata:
           name: farming-secret
         type: Opaque
         stringData:
-          DB_HOST: ${vars.DB_HOST}
-          DB_USERNAME: ${vars.DB_USERNAME}
-          DB_PASSWORD: ${vars.DB_PASSWORD}
-        EOF
+          DB_HOST: $DB_HOST
+          DB_USERNAME: $DB_USERNAME
+          DB_PASSWORD: $DB_PASSWORD" | kubectl apply -f -
 
     # The KUBECONFIG env var is automatically exported and picked up by kubectl.
     - name: Deploy manifest
