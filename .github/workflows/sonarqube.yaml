@@ -178,7 +178,7 @@ jobs:
     runs-on: ubuntu-latest
     # needs: build-and-scan
     outputs:
-      INGRESS_IP: ${{ steps.step1.outputs.INGRESS_IP }}
+      INGRESS_URL: ${{ steps.ingress_ip.outputs.INGRESS_IP }}
     permissions:
       contents: 'read'
       id-token: 'write' # Needed for OIDC token generation
@@ -266,12 +266,12 @@ jobs:
     steps:
       - name: Run application Testing using curl to ingress ip
         env:
-          INGRESS_IP: ${{needs.dev-deploy.outputs.INGRESS_IP}}
+          URL: ${{needs.dev-deploy.outputs.INGRESS_URL}}
         run: |
-          echo "$INGRESS_IP"
-          echo "http://${{env.INGRESS_IP}}/api/${{env.ROUTE}}"
+          echo "$URL"
+          echo "http://$URL/${{env.ROUTE}}"
           echo "-------------------------"
-          curl http://${{env.INGRESS_IP}}/api/${{env.ROUTE}}
+          curl http://$URL/${{env.ROUTE}}
 
 
   # Add environment with url variable 
