@@ -28,7 +28,7 @@ env:
   TAG: "farming"
   GKE_CLUSTER: "agric-os-prod-v2"
   GKE_ZONE: "europe-west3-a"
-  ROUTE: "api/farmer"
+  ROUTE: "api/farmers"
 
 
 jobs:
@@ -269,9 +269,14 @@ jobs:
           URL: ${{needs.dev-deploy.outputs.INGRESS_URL}}
         run: |
           echo "$URL"
-          echo "http://$URL/${{env.ROUTE}}"
           echo "-------------------------"
-          curl http://$URL/${{env.ROUTE}}
+          echo "statusCode=${curl -i -s http://$URL/$ROUTE  | grep HTTP | awk '{print $2}'}"
+          if [[ $statusCode -eq 200 ]]; then
+            echo "API endpoint is accessible"
+          else
+            echo "404 Error: Resource not found"
+            exit 1  # Exit with an error code to indicate failure
+          fi
 
 
   # Add environment with url variable 
