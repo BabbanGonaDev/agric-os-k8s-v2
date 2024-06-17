@@ -223,7 +223,7 @@ jobs:
 
     - name: Create or update application secret
       run: |
-        echo "DB_HOST: $DB_HOST"
+        echo "DB_HOST: ${{DB_HOST}}"
         echo "DB_USERNAME: $DB_USERNAME"
         echo "DB_PASSWORD: $DB_PASSWORD"
 
