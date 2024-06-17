@@ -28,6 +28,7 @@ env:
   TAG: "farming"
   GKE_CLUSTER: "agric-os-prod-v2"
   GKE_ZONE: "europe-west3-a"
+  ROUTE: 
 
 
 jobs:
@@ -176,7 +177,8 @@ jobs:
   dev-deploy:
     runs-on: ubuntu-latest
     # needs: build-and-scan
-
+    outputs:
+      INGRESS_IP: ${{ steps.step1.outputs.INGRESS_IP }}
     permissions:
       contents: 'read'
       id-token: 'write' # Needed for OIDC token generation
@@ -240,10 +242,11 @@ jobs:
     - name: Deploy manifest
       run: 'kubectl apply -f applications/service-envs/dev'
 
-    - name: Retrieve ingress IP
+    - name: Retrieve ingress Host Url IP
+      id: ingress_ip
       run: |
         INGRESS_IP=$(kubectl get ingress -o json | jq -r '.items[0].status.loadBalancer.ingress[0].ip')
-        echo "INGRESS_IP=$INGRESS_IP" >> $GITHUB_ENV
+        echo "INGRESS_IP=$INGRESS_IP" >> $GITHUB_OUTPUT
 
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
@@ -257,11 +260,17 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
       if: always()
 
-  # Integration_testing:
-  #   needs: redeploy
-  #   steps:
-  #   - name: Run application Testing using curl to ingress ip
-  #     run: |
+  Integration_testing:
+    needs: dev-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          INGRESS_IP: ${{needs.dev-deploy.outputs.INGRESS_IP}}
+      - name: Run application Testing using curl to ingress ip
+        run: |
+          echo "-------------------------"
+          echo "$URL"
+          curl http://${{env.INGRESS_IP}}/api/${{env.ROUTE}}
 
 
   # Add environment with url variable 
