@@ -263,6 +263,11 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
       if: always()
 
+
+  Run-Integration-Testing:
+    run-on: ubuntu-latest
+    needs: dev-deploy
+    steps:
     - name: Run application Testing using curl to ingress ip
       env:
         URL: ${{needs.dev-deploy.outputs.INGRESS_URL}}
