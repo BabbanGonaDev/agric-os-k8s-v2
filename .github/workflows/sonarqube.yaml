@@ -175,6 +175,9 @@ jobs:
 
   # Job 4: Redeploy Kubernetes Deployment
   dev-deploy:
+    environment:
+      name: dev
+      url: http://${{ steps.ingress_ip.outputs.INGRESS_IP }}/$ROUTE
     runs-on: ubuntu-latest
     # needs: build-and-scan
     outputs:
