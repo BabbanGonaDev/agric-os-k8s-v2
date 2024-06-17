@@ -268,8 +268,9 @@ jobs:
         env:
           INGRESS_IP: ${{needs.dev-deploy.outputs.INGRESS_IP}}
         run: |
+          echo "$INGRESS_IP"
+          echo "http://${{env.INGRESS_IP}}/api/${{env.ROUTE}}"
           echo "-------------------------"
-          echo "$URL"
           curl http://${{env.INGRESS_IP}}/api/${{env.ROUTE}}
 
 
