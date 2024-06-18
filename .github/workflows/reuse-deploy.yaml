@@ -1,0 +1,114 @@
+name: Deployment -  Reusable Workflow
+
+on:
+  workflow_call:
+    inputs:
+      GKE_CLUSTER:
+        required: true
+        default: "agric-os-prod-v2"
+      GKE_ZONE:
+        required: true
+        type: string
+        default: "europe-west3-a"
+      REPLICAS:
+        required: true
+        type: string
+      TAG:
+        required: true
+        type: string
+      IMAGE:
+        required: true
+        type: string
+      DB_USERNAME:
+        required: true
+        type: string
+      DB_PASSWORD:
+        required: true
+        type: string
+      ENVIRONMENT: 
+        required: true
+        type: string
+    secrets:
+      credentials_json:
+        required: true
+    outputs:
+      INGRESS_URL:
+        value: ${{ jobs.reuse-deploy.outputs.INGRESS_URL }}
+
+jobs: 
+  # Job 4: Redeploy Kubernetes Deployment
+  reuse-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{inputs.ENVIRONMENT}}
+      url: http://${{ steps.ingress_ip.outputs.INGRESS_IP }}/${{env.ROUTE}}
+    outputs:
+      INGRESS_URL: ${{ steps.ingress_ip.outputs.INGRESS_IP }}
+    permissions:
+      contents: 'read'
+      id-token: 'write' # Needed for OIDC token generation
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Authenticate to Google Cloud
+      id: gcp-auth
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: '${{ secrets.gcp_credentials }}'
+        # workload_identity_provider: '/projects/524687905739/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+        # service_account: 'agricos-prod-access-from-githu@agri-os-prod.iam.gserviceaccount.com'
+        # audience: "//iam.googleapis.com/projects/agri-os-prod /locations/global/workloadIdentityPools/github-pool/providers/github-provider"
+
+    - name: Get GKE Credentials
+      id: get-credentials
+      uses: google-github-actions/get-gke-credentials@v1
+      with:
+        cluster_name: ${{inputs.GKE_CLUSTER}}
+        location: ${{inputs.GKE_ZONE}}
+
+    - name: Replace token in manifest files
+      uses: cschleiden/replace-tokens@v1
+      with:
+        tokenPrefix: '_{_'
+        tokenSuffix: '_}_'
+        files: '["applications/service-envs/dev/*.yaml"]'
+      env:
+        NAMESPACE: ${{inputs.NAMESPACE}}
+        REPLICAS: ${{inputs.REPLICAS}}
+        IMAGE: ${{inputs.IMAGE}}:${{env.TAG}}
+
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    - name: Install jq
+      run: sudo apt-get update && sudo apt-get install -y jq
+
+
+    - name: Create or update application secret
+      run: |
+        echo "apiVersion: v1
+        kind: Secret
+        metadata:
+          name: farming-secret
+        type: Opaque
+        stringData:
+          DB_HOST: ${{ inputs.DB_HOST }}
+          DB_USERNAME: ${{ inputs.DB_USERNAME }}
+          DB_PASSWORD: ${{ inputs.DB_PASSWORD }}" | kubectl apply -f -
+
+        kubectl get secret farming-secret -o yaml
+
+
+    # The KUBECONFIG env var is automatically exported and picked up by kubectl.
+    - name: Deploy manifest
+      run: 'kubectl apply -f applications/service-envs/dev'
+
+    - name: Retrieve ingress Host Url IP
+      id: ingress_ip
+      run: |
+        INGRESS_IP=$(kubectl get ingress -o json | jq -r '.items[0].status.loadBalancer.ingress[0].ip')
+        echo "INGRESS_IP=$INGRESS_IP" >> $GITHUB_OUTPUT
