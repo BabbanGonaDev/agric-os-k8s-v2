@@ -36,7 +36,7 @@ on:
       gcp_credentials:
         required: true
       SLACK_WEBHOOK:
-        SLACK_WEBHOOK:
+        slack_webhook:
           required: true
     outputs:
       INGRESS_URL:
@@ -131,7 +131,7 @@ jobs:
         SLACK_TITLE: Agric OS Deployment
         SLACK_MESSAGE: "${{ github.event.head_commit.message }} || App_version:${{ env.APP_VERSION }} "
         SLACK_USERNAME: rtCamp
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK  }}
+        SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
       if: failure()
 
   Reuse-Integration:
