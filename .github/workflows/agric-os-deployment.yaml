@@ -214,7 +214,7 @@ jobs:
       ENVIRONMENT: "production"
     secrets:
       gcp_credentials: ${{ secrets.gcp_credentials }}
-      SLACK_WEBHOOK: ${{secrets.SLACK_WEBHOOK}}
+      slack_webhook: ${{secrets.SLACK_WEBHOOK}}
 
   # Slack-notification:
   #   if: always()
