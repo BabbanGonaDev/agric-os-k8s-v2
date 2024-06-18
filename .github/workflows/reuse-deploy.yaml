@@ -35,6 +35,9 @@ on:
     secrets:
       gcp_credentials:
         required: true
+      SLACK_WEBHOOK:
+        SLACK_WEBHOOK:
+          required: true
     outputs:
       INGRESS_URL:
         value: ${{ jobs.reuse-deploy.outputs.INGRESS_URL }}

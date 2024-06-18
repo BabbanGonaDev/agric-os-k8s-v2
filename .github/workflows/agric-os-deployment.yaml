@@ -48,7 +48,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}} # Only required for Organizations,
-        
+
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
       env:
@@ -195,6 +195,7 @@ jobs:
       ENVIRONMENT: "dev"
     secrets:
       gcp_credentials: ${{ secrets.gcp_credentials }}
+      SLACK_WEBHOOK: ${{secrets.SLACK_WEBHOOK}}
 
   # Job 4: Redeploy Kubernetes Deployment
   staging-deploy:
@@ -213,6 +214,7 @@ jobs:
       ENVIRONMENT: "production"
     secrets:
       gcp_credentials: ${{ secrets.gcp_credentials }}
+      SLACK_WEBHOOK: ${{secrets.SLACK_WEBHOOK}}
 
   # Slack-notification:
   #   if: always()
