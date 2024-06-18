@@ -147,6 +147,7 @@ jobs:
       GKE_ZONE: europe-west3-a #${{env.GKE_ZONE}}
       REPLICAS: ${{vars.REPLICAS}}
       TAG: farming #${{env.TAG}}
+      ROUTE: "api/farmers"
       IMAGE: lukhee/bg-agric-os #${{env.IMAGE}}
       ENVIRONMENT: "dev"
     secrets:
@@ -183,6 +184,7 @@ jobs:
       GKE_ZONE: europe-west3-a #${{env.GKE_ZONE}}
       REPLICAS: ${{vars.REPLICAS}}
       TAG: farming #${{env.TAG}}
+      ROUTE: "api/farmers"
       IMAGE: lukhee/bg-agric-os #${{env.IMAGE}}
       ENVIRONMENT: "production"
     secrets:
