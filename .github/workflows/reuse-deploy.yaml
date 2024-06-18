@@ -30,7 +30,7 @@ on:
         required: true
         type: string
     secrets:
-      credentials_json:
+      gcp_credentials:
         required: true
     outputs:
       INGRESS_URL:

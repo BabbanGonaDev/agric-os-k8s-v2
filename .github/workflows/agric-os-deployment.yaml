@@ -149,7 +149,7 @@ jobs:
       IMAGE: lukhee/bg-agric-os #${{env.IMAGE}}
       ENVIRONMENT: "dev"
     secrets:
-      credentials_json: ${{ secrets.gcp_credentials }}
+      gcp_credentials: ${{ secrets.gcp_credentials }}
 
   Run-Integration-Testing:
     if: ${{ startsWith(github.ref, 'refs/heads/feature') || github.ref == 'refs/heads/dev' }}
