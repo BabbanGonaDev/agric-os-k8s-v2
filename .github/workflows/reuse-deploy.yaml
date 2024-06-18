@@ -128,9 +128,9 @@ jobs:
 
     - name: Run application Testing using curl to ingress ip
       env:
-        URL: ${{needs.staging-deploy.outputs.INGRESS_URL}}
+        URL: ${{needs.reuse-deploy.outputs.INGRESS_URL}}
       run: |
-        echo "http://$URL/$ROUTE"
+        echo "http://$URL/${{inputs.ROUTE}}"
         echo "-------------------------"
         status_code=$(curl -i -s http://$URL/${{inputs.ROUTE}} | grep HTTP | awk '{print $2}')
         if [[ $status_code -eq 200 ]]; then
