@@ -17,7 +17,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /api/farmers
+          - path: /api
             pathType: Prefix
             backend:
               service:
