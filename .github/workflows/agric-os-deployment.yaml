@@ -180,7 +180,7 @@ jobs:
 
   # Job 4: Redeploy Kubernetes Deployment
   dev-deploy:
-    if: ${{ startsWith(github.ref, 'refs/heads/feature') || github.ref == 'refs/heads/dev' }}
+    # if: ${{ startsWith(github.ref, 'refs/heads/feature') || github.ref == 'refs/heads/dev' }}
     needs: build-trivy-check-and-push
     uses: ./.github/workflows/reuse-deploy.yaml
     with:
@@ -191,6 +191,7 @@ jobs:
       REPLICAS: ${{vars.REPLICAS}}
       TAG: farming #${{env.TAG}}
       ROUTE: "api/farmers"
+      NAMESPACE: default
       IMAGE: lukhee/bg-agric-os #${{env.IMAGE}}
       ENVIRONMENT: "dev"
     secrets:
@@ -210,6 +211,7 @@ jobs:
       REPLICAS: ${{vars.REPLICAS}}
       TAG: farming #${{env.TAG}}
       ROUTE: "api/farmers"
+      NAMESPACE: staging
       IMAGE: lukhee/bg-agric-os #${{env.IMAGE}}
       ENVIRONMENT: "production"
     secrets:

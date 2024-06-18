@@ -32,6 +32,10 @@ on:
       ROUTE: 
         required: true
         type: string
+      NAMESPACE: 
+        required: true
+        type: string
+        default: default
     secrets:
       gcp_credentials:
         required: true
@@ -116,7 +120,7 @@ jobs:
     - name: Retrieve ingress Host Url IP
       id: ingress_ip
       run: |
-        INGRESS_IP=$(kubectl get ingress -o json | jq -r '.items[0].status.loadBalancer.ingress[0].ip')
+        INGRESS_IP=$(kubectl get ingress -n ${{inputs.NAMESPACE}} -o json | jq -r '.items[0].status.loadBalancer.ingress[0].ip')
         echo "INGRESS_IP=$INGRESS_IP" >> $GITHUB_OUTPUT
 
     - name: Slack Notification
