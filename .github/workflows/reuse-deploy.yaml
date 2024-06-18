@@ -6,6 +6,7 @@ on:
       GKE_CLUSTER:
         required: true
         default: "agric-os-prod-v2"
+        type: string
       GKE_ZONE:
         required: true
         type: string
