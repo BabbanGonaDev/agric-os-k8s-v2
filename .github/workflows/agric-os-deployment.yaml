@@ -191,6 +191,8 @@ jobs:
       REPLICAS: ${{vars.REPLICAS}}
       TAG: farming #${{env.TAG}}
       ROUTE: "api/farmers"
+      SUB_DOMAIN: "dev"
+      APP_PATH: "farmers"
       NAMESPACE: default
       IMAGE: lukhee/bg-agric-os #${{env.IMAGE}}
       ENVIRONMENT: "dev"
@@ -210,6 +212,8 @@ jobs:
       GKE_ZONE: europe-west3-a #${{env.GKE_ZONE}}
       REPLICAS: ${{vars.REPLICAS}}
       TAG: farming #${{env.TAG}}
+      SUB_DOMAIN: "production"
+      APP_PATH: "farmers"
       ROUTE: "api/farmers"
       NAMESPACE: "production"
       IMAGE: lukhee/bg-agric-os #${{env.IMAGE}}

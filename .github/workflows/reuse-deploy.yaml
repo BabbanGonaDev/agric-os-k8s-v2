@@ -32,10 +32,17 @@ on:
       ROUTE: 
         required: true
         type: string
-      NAMESPACE: 
+      NAMESPACE:
         required: true
         type: string
         default: default
+      SUB_DOMAIN: 
+        required: true
+        type: string
+        default: dev
+      APP_PATH: 
+        required: true
+        type: string
     secrets:
       gcp_credentials:
         required: true
@@ -88,6 +95,8 @@ jobs:
         NAMESPACE: ${{inputs.NAMESPACE}}
         REPLICAS: ${{inputs.REPLICAS}}
         IMAGE: ${{inputs.IMAGE}}:${{inputs.TAG}}
+        SUB_DOMAIN: ${{inputs.SUB_DOMAIN}}
+        APP_PATH: ${{inputs.APP_PATH}}
 
     - name: Install kubectl
       uses: azure/setup-kubectl@v3
@@ -104,6 +113,7 @@ jobs:
         kind: Secret
         metadata:
           name: farming-secret
+          namespace: ${{ inputs.NAMESPACE }}
         type: Opaque
         stringData:
           DB_HOST: ${{ inputs.DB_HOST }}
