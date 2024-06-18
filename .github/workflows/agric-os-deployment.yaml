@@ -211,7 +211,7 @@ jobs:
       REPLICAS: ${{vars.REPLICAS}}
       TAG: farming #${{env.TAG}}
       ROUTE: "api/farmers"
-      NAMESPACE: staging
+      NAMESPACE: "production"
       IMAGE: lukhee/bg-agric-os #${{env.IMAGE}}
       ENVIRONMENT: "production"
     secrets:
