@@ -78,7 +78,7 @@ jobs:
       env:
         NAMESPACE: ${{inputs.NAMESPACE}}
         REPLICAS: ${{inputs.REPLICAS}}
-        IMAGE: ${{inputs.IMAGE}}:${{env.TAG}}
+        IMAGE: ${{inputs.IMAGE}}:${{inputs.TAG}}
 
     - name: Install kubectl
       uses: azure/setup-kubectl@v3
