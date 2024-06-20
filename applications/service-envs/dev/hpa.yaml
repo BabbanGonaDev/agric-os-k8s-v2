@@ -1,13 +1,13 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: farming-hpa
+  name: farming-hpa   # "*******change for new module*******"
   namespace: _{_NAMESPACE_}_
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: farming-deployment
+    name: farming-deployment  # "*******change for new module*******"
   minReplicas: 2
   maxReplicas: 10
   metrics:

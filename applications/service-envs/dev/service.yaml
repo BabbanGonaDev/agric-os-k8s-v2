@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: farming-service
-  namespace: _{_NAMESPACE_}_
+  name: farming-service   # "*******change for new module*******"
+  namespace: _{_NAMESPACE_}_   # "*******change for new module*******"
 spec:
   selector:
-    app: farming
+    app: farming  # "*******change for new module*******"
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 3000
+      targetPort: 3000   # "*******change for new module*******"

@@ -148,7 +148,7 @@ jobs:
       if: failure()
 
   Reuse-Integration:
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: reuse-deploy
     steps:

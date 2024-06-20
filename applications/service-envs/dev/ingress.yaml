@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: farmer-ingress
+  name: farmer-ingress    # "*******change for new module*******"
   namespace: _{_NAMESPACE_}_
   annotations:
     cloud.google.com/neg: '{"ingress": true}'
@@ -15,14 +15,14 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: _{_SUB_DOMAIN_}_.example.com
+    - host: _{_SUB_DOMAIN_}_.example.com   # "*******change for new module*******"
       http:
         paths:
-          - path: /api/_{_APP_PATH_}_
+          - path: /api/_{_APP_PATH_}_    # "*******change for new module*******"
             pathType: Prefix
             backend:
               service:
-                name: farming-service
+                name: farming-service    # "*******change for new module*******"
                 port:
                   number: 80
   defaultBackend:
